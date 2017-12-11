@@ -67,6 +67,13 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(400)
             return
 
+        # Get referer
+        referer = self.headers.getheader('Referer')
+
+        if not referer:
+            self.send_response(400)
+            return
+
         # Parse query string to get token
         query = parse_qs(self.path[18:])
 
@@ -85,13 +92,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(400)
             return
 
-        # Otherwise we return signed request's token and MAC as javascript
+        # Otherwise we redirect with signed request's token and MAC
         # to prove that user reached our server
         sign = get_signature(token, mac)
-        self.send_response(200)
-        self.send_header('Content-type', 'application/javascript')
+        self.send_response(302)
+        self.send_header('Location', referer + 'js/mac-addr-auth.js?token=%s&mac=%s&sign=%s' % (token, mac, sign))
         self.end_headers()
-        self.wfile.write("proveMacAddrAuth({'token':'%s','mac':'%s','sign':'%s'});" % (token, mac, sign))
 
 # Start HTTP-server
 httpd = HTTPServer(('', port), Handler)
