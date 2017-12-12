@@ -11,29 +11,24 @@ function hextostr(start, end) {
 {
     if (substr($0, 1, 1) != "\t") {
         mac = $1
-        token = ""
-        read_token = 0
     } else if ($1 == "0x0050:") {
-        read_token = 1
-    }
-
-    if (read_token) {
+        token = hextostr(2, NF)
+    } else if ($1 == "0x0060:") {
         token = token hextostr(2, NF)
+
         end = index(token, "HTTP")
-
         if (end > 0) {
-            read_token = 0
             token = substr(token, 1, end - 2)
-            end = index(token, "&")
+        }
 
-            if (end > 0) {
-                token = substr(token, 1, end - 2)
-            }
-            
-            if (length(token) > 0) {
-                print token, mac
-                fflush()
-            }
+        end = index(token, "&")
+        if (end > 0) {
+            token = substr(token, 1, end - 2)
+        }
+
+        if (length(token) > 0) {
+            print token, mac
+            fflush()
         }
     }
 }

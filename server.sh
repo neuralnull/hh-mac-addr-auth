@@ -26,6 +26,6 @@ if ! [ -f "${PRIVATE_KEY}" ]; then
     chmod 0600 "${PRIVATE_KEY}"
 fi
 
-sudo tcpdump -elnqtx -s0 "${TCPDUMP_FILTER}" \
+sudo tcpdump -elnqtx -s126 "${TCPDUMP_FILTER}" \
     | awk -f tcpdump-parser.awk \
     | python mac-addr-auth.py "${PORT}" "${PRIVATE_KEY}"
