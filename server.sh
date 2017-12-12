@@ -22,7 +22,8 @@ PUBLIC_KEY=public.pem
 # Generate key if it doesn't exist
 if ! [ -f "${PRIVATE_KEY}" ]; then
     openssl genrsa -out "${PRIVATE_KEY}" 4096
-    openssl rsa -in "${PRIVATE_KEY}" -outform PEM -pubout -out "${PUBLIC_KEY}"
+    openssl rsa -in "${PRIVATE_KEY}" -pubout -out "${PUBLIC_KEY}"
+    chmod 0600 "${PRIVATE_KEY}"
 fi
 
 sudo tcpdump -elnqtx -s0 "${TCPDUMP_FILTER}" \
