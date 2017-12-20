@@ -16,4 +16,4 @@ if ! [ -f "${PRIVATE_KEY}" ]; then
     chmod 0600 "${PRIVATE_KEY}"
 fi
 
-python token-signer.py "${PORT}" "${PRIVATE_KEY}"
+python token-signer.py "${PORT}" "${PRIVATE_KEY}" &> server.log
